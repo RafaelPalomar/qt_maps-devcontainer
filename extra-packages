@@ -7,6 +7,7 @@ cmake
 ninja-build
 cmake-curses-gui
 fd-find
+ripgrep
 
 # Qt5 dependencies for the user interface and development
 qtmultimedia5-dev
