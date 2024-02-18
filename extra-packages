@@ -6,6 +6,8 @@ build-essential
 cmake
 ninja-build
 cmake-curses-gui
+
+# Other tools
 fd-find
 ripgrep
 
