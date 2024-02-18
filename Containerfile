@@ -29,6 +29,9 @@ RUN apt-get update && \
 #     cmake ../Slicer && \
 #     make -j$(nproc)
 
+# This makes possible to address git directories from within a distrobox or emacs TRAMP
+git config --system --add safe.directory '*'
+
 # The entry point or command to run when the container starts can be set here
 # For example, opening a bash shell or starting a specific development tool
 CMD ["/bin/bash"]
