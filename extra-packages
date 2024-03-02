@@ -11,21 +11,17 @@ cmake-curses-gui
 fd-find
 ripgrep
 
-# Qt5 dependencies for the user interface and development
-qtmultimedia5-dev
-qttools5-dev
-libqt5xmlpatterns5-dev
-libqt5svg5-dev
-qtwebengine5-dev
-qtscript5-dev
-qtbase5-private-dev
-libqt5x11extras5-dev
-libxt-dev
-libqt5opengl5-dev
-
 # Other essential packages for software development
 libssl-dev
 libcurl4-openssl-dev
+libprotobuf-dev
+protobuf-compiler
+protobuf-compiler-grpc
+libgrpc++-dev
+libgrpc-dev
+libglu1-mesa-dev
+freeglut3-dev
+mesa-common-dev
 
 # Python for scripting within 3D Slicer
 python3-dev

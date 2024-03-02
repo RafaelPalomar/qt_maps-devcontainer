@@ -2,9 +2,9 @@
 FROM ubuntu:22.04
 
 # Set labels to provide metadata about the container, indicating its purpose as a devcontainer for 3D Slicer development
-LABEL org.opencontainers.image.title="3D Slicer Devcontainer" \
-      org.opencontainers.image.description="A development container for 3D Slicer with all dependencies installed." \
-      maintainer="Rafael Palomar (rafael.palomar@ous-research.no)"
+LABEL org.opencontainers.image.title="Qt Maps development container" \
+      org.opencontainers.image.description="This container comes with own qt build to build the Qt maps project" \
+      maintainer="Rafael Palomar (rafael.palomar@ntnu.no)"
 
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
@@ -19,18 +19,22 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Example command to clone and build 3D Slicer; adjust as necessary for your specific use case
-# This step might be performed outside of the Dockerfile, depending on your development workflow
-# RUN git clone https://github.com/Slicer/Slicer.git && \
-#     cd Slicer && \
-#     ./Utilities/SetupForDevelopment.sh && \
-#     mkdir Slicer-build && \
-#     cd Slicer-build && \
-#     cmake ../Slicer && \
-#     make -j$(nproc)
-
 # This makes possible to address git directories from within a distrobox or emacs TRAMP
-RUN git config --system --add safe.directory '*'
+RUN git config --system --add safe.directory '*' && \
+    git config --global http.sslVerify false # This is a workaround and it should be changed
+
+RUN mkdir /src && \
+    cd /src && \
+    git clone https://code.qt.io/qt/qt5.git qt6 && \
+    cd qt6 && \
+    ./init-repository --module-subset="qtbase,qtgrpc,qtrepotools" -f
+
+RUN cd /src && \
+    mkdir qt6-build && \
+    cd qt6-build && \
+    ../qt6/configure -developer-build -nomake examples -make tools -make tests -widgets -gui -prefix /opt/qt6 && \
+    cmake --build . --parallel && \
+    cmake --build . --target install
 
 # The entry point or command to run when the container starts can be set here
 # For example, opening a bash shell or starting a specific development tool
