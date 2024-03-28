@@ -23,18 +23,17 @@ RUN apt-get update && \
 RUN git config --system --add safe.directory '*' && \
     git config --global http.sslVerify false # This is a workaround and it should be changed
 
-RUN mkdir /src && \
-    cd /src && \
-    git clone https://code.qt.io/qt/qt5.git qt6 && \
-    cd qt6 && \
-    ./init-repository --module-subset="qtbase,qtgrpc,qtrepotools" -f
+# Clone the Qt dev branch
+RUN git clone -b dev --depth 1 https://code.qt.io/qt/qt5.git qtsrc && \
+    cd qtsrc && \
+    ./init-repository --module-subset="qtbase,qtgrpc,qtrepotools" -f --no-optional-deps
 
-RUN cd /src && \
-    mkdir qt6-build && \
-    cd qt6-build && \
-    ../qt6/configure -developer-build -nomake examples -make tools -make tests -widgets -gui -prefix /opt/qt6 && \
-    cmake --build . --parallel && \
-    cmake --build . --target install
+# Configure and build Qt
+RUN mkdir qtbuild && \
+	cd qtbuild && \
+	../qtsrc/configure -developer-build -nomake examples -nomake tests -no-opengl -skip qtdeclarative && \
+	ninja
+# Finished Qt build will not exist in directory '/qtbuild/qtbase'
 
 # The entry point or command to run when the container starts can be set here
 # For example, opening a bash shell or starting a specific development tool
